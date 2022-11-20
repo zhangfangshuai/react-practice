@@ -25,9 +25,9 @@
 <body>
     <div id="app"></div>
 
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-    <script type="text/javascript" src="babel.min.js"></script>
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
 
     <script type="text/babel">
         const myId = 'title'
@@ -35,7 +35,7 @@
 
         // 1、创建虚拟DOM，如果需要换行书写，需要使用小括号包裹
         const VDOM = (
-            <div class="vdom-container">
+            <div className="vdom-root">
                 <h2 className="title" id={myId}>
                     <span style={{color: 'white', fontSize: '18px'}}>{myData.toLowerCase()}</span>
                 </h2>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之一 · state</title>
+</head>
+<!-- 
+    【简写目标】干掉constructor
+        1. constructor之所以存在是为了初始化数据，和解决原型对象上方法被当作事件绑定回调函数时this丢失的问题
+        2. 类本身就提供了解决这两个问题的手段
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Weather extends React.Component {
+            // 干掉构造器函数
+            // constructor(props) {
+            //     super(props)
+            //     // 【简写目标1】：想初始化状态，但没地方写，所以借助构造器函数来初始化。
+            //     this.state = { isHot: true, wind: '微风' }
+            //     // 【简写目标2】：把该功能挪到方法定义位置 - 当函数过多时，容易在构造器里产生一堆代码
+            //     this.changeWeather = this.changeWeather.bind(this)
+            // }
+
+            // 1. 初始化状态
+            // 如下代码的含义是：给类的实例对象添加一个属性state，值为一个对象。
+            state = { isHot: true, wind: '微风' }
+
+            render() {
+                const { isHot, wind } = this.state
+                return <h2 onClick={this.changeWeather}>今天天气很{isHot ? '炎热' : '凉爽'}, {wind}</h2>
+            }
+            
+            // 2. 自定义方法 - 要用赋值语句 + 箭头函数
+            // 如下代码的含义是：给类的实例对象添加一个属性changeWeather，值为一个函数。
+            // 注意这里一定不能用function，写了function就有私有作用域，就又引入类的实例对象的实例方法被直接赋值给回调函数：回调函数不是由类实例调用，且在类的局部开启严格模式后this丢失的问题。只不过是从原型对象改成了实例对象而已，并没有质的改变。
+            // 箭头函数自身不存在this，因此必定指向上层作用域，即Weather实例，所以能保证回调函数调用时this指向正确。
+            changeWeather = () => {
+                const { isHot } = this.state
+                this.setState({
+                    isHot: !isHot
+                })
+            }
+        }
+        
+        // 渲染虚拟DOM到真实DOM
+        ReactDOM.render(<Weather/>, document.getElementById('app'))
+    </script>
+</body>
+</html>

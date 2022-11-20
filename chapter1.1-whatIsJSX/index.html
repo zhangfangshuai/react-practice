@@ -6,20 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>heallo_react</title>
 </head>
+<!-- 
+    什么是JSX：
+        JSX全称 JavaSript XML，是React定义的一种类似于XML的JS扩展语法：JS+XML。
+    为什么需要JSX：
+        JSX只是为了解决一个问题，就是React原生创建虚拟DOM太繁琐，有了JSX可以让开发人员以熟悉的HTML编码方式更简单的创建虚拟DOM
+ -->
 <body>
     <!-- 准备一个容器 -->
     <div id="app"></div>
 
     <!-- 引入react核心库 - 全局会多出变量React-->
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react.development.js"></script>
     <!-- 引入react-dom，用于支持react操作DOM：全局会多出变量 ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
     <!-- 引入babel，用于将jsx转为js -->
-    <script type="text/javascript" src="babel.min.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
 
     <script type="text/babel"> /* 此处告诉浏览器，script内的是jsx语法，需要用babel转换 */
         // 1、创建虚拟DOM
-        // 为什么需要JSX：JSX只是为了解决一个问题，就是React原生创建虚拟DOM太繁琐，有了JSX可以让开发人员以熟悉的HTML编码方式更简单的创建虚拟DOM
+        // 可以把这段代码复制粘贴到babel官网试一试中，查看babel转化结果。
         const VDOM = <h1 id="title">Hello, React</h1>  /* 此处为jsx语法，不能加引号，加了引号就成了js，DOM标签将不生效 */
         // 2、渲染虚拟DOM到页面
         ReactDOM.render(VDOM, document.getElementById('app'))

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之一 · state</title>
+</head>
+<!-- 
+    组件实例的三大属性之一：state（状态）
+        1. 状态用来存放React动态页面需要的数据
+        2. 当需要给类式组件添加实例属性时，需要添加构造器函数，而构造器函数的参数，是React另一大属性：props
+        3. 存放（赋值）state数据时，在constructor中，读取组件实例属性时，用this在组件render函数JSX中任意位置.
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Weather extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    isHot: true
+                }
+                // 【问题】给实例属性改个名changeMe，对应需要修改的是哪里。
+                this.changeMe = this.changeWeather.bind(this)
+            }
+
+            render() {
+                const { isHot } = this.state
+                // 【答案】由于响应时间需要触发实例上的方法，因此不能再调用原型对象上的方法，而是changeMe
+                return <h2 onClick={this.changeMe}>今天天气很{isHot ? '炎热' : '凉爽'}</h2>
+            }
+
+            changeWeather() {
+                const { isHot } = this.state
+                this.setState({
+                    isHot: isHot
+                })
+            }
+        }
+        
+        // 2、渲染虚拟DOM到页面
+        ReactDOM.render(<Weather/>, document.getElementById('app'))
+    </script>
+</body>
+</html>

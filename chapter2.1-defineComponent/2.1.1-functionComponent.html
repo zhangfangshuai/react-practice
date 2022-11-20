@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>函数式组件</title>
+</head>
+<!-- 
+    函数式组件：
+        1. 用函数创建组件，适用于【简单组件】的定义。
+        2. 自定义组件的首字母必须以大写字母开头，小写字母会被认为是HTML标签。这是JSX语法规则之一。
+    执行了ReactDOM.render(<MyComponent/>, document.getElementById('app'))，之后发生了什么？
+        1. React解析组件标签，找到MyComponent组件；
+        2. 发现组件是使用函数定义， 随后调用函数，将返回的虚拟DOM转为真实DOM，并呈现在页面中
+ -->
+
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 1、函数式组件。
+        function MyComponent() {
+            return <h2>我是用函数定义的组件(适用于【简单组建】的定义)</h2>
+        }
+        
+        // 2、渲染组建到页面，（1）不要直接写函数名，写函数名就真渲染函数体了。（2）自定义组件首字母必须大写。
+        // 写<MyComponent />时，React会帮你调用函数，不需要你自己调用。
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+    </script>
+</body>
+
+</html>

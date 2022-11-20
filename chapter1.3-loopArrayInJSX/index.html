@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsx语法规则</title>
+</head>
+<!-- 
+    jsx里的花括号{}只能嵌入JS表达式，不能嵌入JS语句等其他代码
+        JS表达式：一个JS表达式会产生一个值，可以放在任何一个需要值的地方
+            1. a
+            2. a + b
+            3. demo(1)
+            4. arr.map()
+            5. function() {}
+
+        JS语句：一个JS语句更多的是控制代码的走向
+            1. if() {} else {}
+            2. for() {}
+            3. switch() { case XXX }
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        const lession = ['React', 'Vue', 'Angular']
+
+        // 1、创建虚拟DOM。循环数组需要用arr.map()Js表达式，不能用for(){}这样的JS语句
+        const VDOM = (
+            // 多个内部标签要用一个根标签包裹
+            <div className="vdom-root">
+                <h2>前端JS框架列表</h2>
+                <ul>
+                    {
+                        lession.map((item, index) => {
+                            // 在变量内部再使用变量，依旧用花括号包裹
+                            return <li key={index}>{item}</li>
+                        })
+                    }
+                </ul>
+            </div>
+        )
+        // 2、渲染虚拟DOM到页面
+        ReactDOM.render(VDOM, document.getElementById('app'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之一 · state</title>
+</head>
+<!-- 
+    组件实例的三大属性之一：state（状态）
+        1. 状态用来存放React动态页面需要的数据
+        2. 当需要给类式组件添加实例属性时，需要添加构造器函数，而构造器函数的参数，是React另一大属性：props
+        3. 构造器函数只执行了一次
+        4. render执行了1+n次。初始化 + state变更时更新的次数
+    严重注意：
+        1. 读取state时可以直接访问this.state
+        2. 修改更新state时
+            2.1 React不允许直接通过this.state修改，即使修改了，React也不认，可以在控制台React插件上看到state不变更
+            2.2 state要通过内置API-setState进行更新。他是React.Component大哥提供的
+    为什么称state是三大属性之一
+        1. 为什么状态要叫state，而不能命名为别的变量？
+            因为React规定只能使用setState去修改状态，setState里调用的固定变量名叫state
+        2. 为什么又规定必须用setState去修改state呢？
+            因为React要在setState中去执行render函数，保证页面刷新，如果直接更改state，就没人触发render函数执行刷新了
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 1、创建类式组件（因为需要state，不能创建函数式组件）
+        class Weather extends React.Component {
+            // 从组件实例的原型方法render上看到，状态state存放在this中，且当前为null
+            // 要把数据存放到this中，就需要用到构造器，这是类的基本知识
+            // 构造器的参数，取决于实例化时实例传入的参数，但是，实例化new这个动作不是编码人员手写的，而是ReactDOM.render这个动作后React自己调用的，因此需要用到React提供的props这个重要属性
+            constructor(props) {
+                super(props) // super方法是类要求的必须调用，和React无关
+                // 初始化状态 - 给组件写入数据，那就放到三大属性之一state中，因为state就是设计出来用作存放数据的
+                this.state = {
+                    isHot: true,
+                    wind: '微风'
+                }
+                // 【思路2.4】拷贝原型对象上this丢失的原型方法到实例身上，并正确绑定this为实例自身。
+                this.changeWeather = this.changeWeather.bind(this)
+            }
+
+            render() {
+                console.log('render中的this：', this) // MyComponent {context: {}, props: {}, refs(), state: null ...}
+                // 读取状态
+                const { isHot, wind } = this.state
+                // React 为了避免与原生属性冲突，它重写了所有事件绑定属性改成小驼峰式命名
+                // 【思路2.1】【难点】this.changeWeather是在调用原型方法，但React的onClick是对this.changeWeather进行了一次赋值，赋值后变成了onClidk的回调函数，就成了直接调用而不是原型调用，因此this会丢失。可参考2.2.2复习
+                // 【思路2.4】此后，再调用this.changeWeather时，调用的就是实例方法，而不是原型方法
+                return <h2 onClick={this.changeWeather}>今天天气很{isHot ? '炎热' : '凉爽'}, {wind}</h2>
+            }
+
+            changeWeather() {
+                // 【思路2.2】
+                // changeWeather放在了哪里？ --放在原型对象上，供实例使用
+                // 由于changeWeather是作为onClick的回调，所以不是通过实例调用，是直接调用
+                // 类中的方法默认开启局部的严格模式，所以，changeWeather中的this为undefined
+                console.log(this); // undefined
+                // 思路【2.3】
+                // React解决这个问题，是把原型对象上的changeWeather方法拷贝一份到实例上，要修改实例属性或方法，就需要放到构造器函数上
+                // 思路【2.5】实例方法上就可以访问到状态state了
+
+                const isHot = this.state.isHot
+                // 严重注意：React不允许直接通过this.state修改
+                // this.state.isHot = !isHot
+                // 状态必须通过React.Component内置的API才可以更新，React才认。setState做的是值合并Object.assign()
+                this.setState({
+                    isHot: !isHot
+                })
+            }
+        }
+        
+        // 2、渲染虚拟DOM到页面
+        ReactDOM.render(<Weather/>, document.getElementById('app'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类的基本知识</title>
+</head>
+<!-- 
+    一：创建类和创建类的实例化
+        1. 类中的构造器不是必须写，要对实例进行一些初始化操作，如添加指定属性时才写
+        1. 理解类中this的指向
+        2. 类中定义的属性，都是放在类的实例对象上的，供实例使用。如this.name
+        3. 类中定义的方法，都是放在了类的原型对象上，供实例使用。如this.speak()
+    二：继承
+        1. 如果A类继承了B类，且A类中写了构造器，那么A类构造器中super时必须要调用的。
+ -->
+
+<body>
+    <script type="text/javascript">
+        // 1、创建一个Person类。
+        class Person {
+            // 构造器方法
+            constructor(name, age) {
+                // 构造器方法中的this是谁？ -- 类的实例对象如p1/p2
+                this.name = name
+                this.age = age
+            }
+
+            // 一般方法
+            speak() {
+                // speak方法放在了哪里？ -- 类的原型对象上，供实例使用
+                // 通过Person实例调用speak时，speak中的this就是Person的实例话对象如p1/p2（通过其他方式如call等方法，this指向会改变）
+                console.log(`my name is ${this.name}, my age is ${this.age}`)
+            }
+
+            // 类不是方法，不能写let function等定义。类中可以直接写赋值语句。
+            // 如下代码的含义是：给类的实例对象添加一个属性，名为a，值为1。
+            // 如果属性的值是从实例化new时传过来的，则需要在构造器上复制，但值如果是固定的，则可以直接如下写。这一点用在React定义state时
+            a = 1
+        }
+
+        // 2、创建类Person实例化对象
+        const p1 = new Person('jane', 18)
+        const p2 = new Person('lucy', 19)
+
+        console.log(p1) // Person { name: 'jane', age: 18 }
+        console.log(p2) // Person { name: 'lucy', age: 19 }
+        p1.speak() // my name is jane, my age is 18
+        p2.speak() // my name is lucy, my age is 19
+
+
+        /**
+         * 创建一个studeng类，继承与Person类
+         */
+        class Student extends Person {
+            // 2. 当学生实例有特殊属性时，如年级，班级等，这些属性不属于Person类，因此不适合加入Person类的属性中
+            constructor(name, age, grade) {
+                // 2.1子类继承父类时，构造器函数中必须调用super方法执行父类构造器函数。且super必须在最前面调用
+                super(name, age)
+                this.grade = grade
+                this.school = '北京大学'
+            }
+            // 3. 重写从父类继承过来的方法。当子类的原型方法与父类原型方法重名时，根据就近原则，查找到子类原型方法后就不再查找原型链
+            speak() {
+                console.log(`my name is ${this.name}, my age is ${this.age}，my grade is ${this.grade}`)
+            }
+
+            // 4. 子类的私有原型方法
+            study() {
+                console.log(`${this.name}在${this.school}上学`);
+            }
+        }
+        // 1.当直接继承，没有写构造器函数时，会继承父类的构造器函数
+        const s1 = new Student('lili', 20, '高二')
+        console.log(s1); // Student { name: 'zhangfs', age: 20, grade: '高二', school: '北京大学' }
+
+        s1.speak() // my name is lili, my age is 20, my grade is 高二
+        s1.study() // lili在北京大学上学
+    </script>
+</body>
+
+</html>
