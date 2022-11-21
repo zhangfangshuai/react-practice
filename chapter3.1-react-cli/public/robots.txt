@@ -1,0 +1,4 @@
+# 爬虫规则文件：规定什么文件能爬，什么不能爬。
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
