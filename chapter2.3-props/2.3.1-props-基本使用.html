@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·props</title>
+</head>
+
+<!-- 
+    组件实例的三大属性之：props
+        1. React会把自定义组件上的属性，存放在组件实例的props对象上
+        2. 获取props使用 this.props
+-->
+
+<body>
+    <div id="app">
+        <div id="p1"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Person extends React.Component {
+            render() {
+                const { name, sex, age } = this.props
+                return (
+                <ul>
+                    <li>姓名：{name}</li>
+                    <li>性别：{sex}</li>
+                    <li>年龄：{age}</li>
+                </ul>
+                )
+            }
+        }
+
+        // 渲染组件到页面上
+        // 传递数值型时使用js语法，因此，要加花括号
+        ReactDOM.render(<Person name="jerry" sex="男" age={19} />, document.getElementById('p1'))
+        ReactDOM.render(<Person name="tom" sex="女" age={18} />, document.getElementById('p2'))
+        ReactDOM.render(<Person name="ming" sex="男" age={22} />, document.getElementById('p3'))
+    </script>
+</body>
+</html>

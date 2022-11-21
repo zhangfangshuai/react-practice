@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·refs</title>
+</head>
+<!-- 
+    createRef式的ref
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class MyComponent extends React.Component {
+            /**
+             * @func React.createRef调用后可以返回一个容器，该容器可以存储被ref所标识的节点
+             * @desc 该容器时专人专用
+             */
+            myRef = React.createRef()
+            myRefRight = React.createRef()
+
+            /**
+             * @func 展示左侧输入框的数据
+             * @desc 注意只能使用 赋值语句 + 箭头函数。否则会有this丢失问题
+             */
+            showData = () => {
+                alert(this.myRef.current.value)
+            }
+
+            /**
+             * @func 展示由侧输入框的数据
+             * @desc 注意只能使用 赋值语句 + 箭头函数。否则会有this丢失问题
+             */
+            showRightData = () => {
+                alert(this.myRefRight.current.value)
+            }
+            
+            render() {
+                // 当实例被初始化时，render函数会被执行，内部的JSX会被执行，React就会去调用ref的回调函数
+                // React在执行ref的回调函数时，会把当前节点当作参数传入回调函数中。
+                // 注意这里箭头函数的this是组件实例
+                return (
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="点击按钮提示数据" />
+                        &emsp;
+                        <button onClick={this.showData}>点我提示左侧的数据</button>
+                        &emsp;
+                        <input ref={this.myRefRight} onBlur={this.showRightData} type="text" placeholder="点击按钮提示数据" />
+                    </div>
+                )
+            }
+        }
+
+        // 渲染组件到页面上
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·refs</title>
+</head>
+<!-- 
+    回调函数式的ref
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class MyComponent extends React.Component {
+            /**
+             * @func 展示左侧输入框的数据
+             * @desc 注意只能使用 赋值语句 + 箭头函数。否则会有this丢失问题
+             */
+            showLeftData = () => {
+                const { leftInput } = this
+                alert(leftInput.value)
+            }
+
+            /**
+             * @func 展示右侧输入框的数据
+             */
+            showRightData = () => {
+                const { rightInput } = this
+                alert(rightInput.value)
+            }
+            
+            render() {
+                // 当实例被初始化时，render函数会被执行，内部的JSX会被执行，React就会去调用ref的回调函数
+                // React在执行ref的回调函数时，会把当前节点当作参数传入回调函数中。
+                // 注意这里箭头函数的this是组件实例
+                return (
+                    <div>
+                        <input ref={cNode=> this.leftInput = cNode} type="text" placeholder="点击按钮提示数据" />
+                        &emsp;
+                        <button onClick={this.showLeftData}>点我提示左侧的数据</button>
+                        &emsp;
+                        <input ref={cNode => this.rightInput = cNode} onBlur={this.showRightData} type="text" placeholder="失去焦点提示数据" />
+                    </div>
+                )
+            }
+        }
+
+        // 渲染组件到页面上
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+    </script>
+</body>
+</html>

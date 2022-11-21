@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命周期钩子</title>
+</head>
+
+<!-- 
+    组件生命流的三个渠道
+        1. setState() ==> shouldComponentUpdate ==> componentWillUpdate ==> render ==> componentDidUpdate
+        2. forceUpdate() ==> componentWillUpdate ==> render ==> componentDidUpdate
+        3. 父组件render() ==> componentWillReceiveProps ==> shouldComponentUpdate ==> componentWillUpdate ==> render ==> componentDidUpdate
+        父组件流程见下一篇2.7.3
+-->
+
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Count extends React.Component {
+            // 构造器
+            constructor(props) {
+                console.log('Count---constructor');
+                super(props)
+
+                this.state = { num: 1 } // 有了构造器，state初始化就写到构造器里，合适点；因为构造器就是拿来初始化数据的。
+            }
+
+            // 加1按钮回调 --- 自定义函数使用：赋值语句 + 箭头函数
+            add = () => {
+                const { num } = this.state
+                this.setState({ num: num + 1 })
+            }
+            // 触发卸载组件按钮回调
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('app'))
+            }
+            // 出发强制更新按钮回调
+            force = () => {
+                this.forceUpdate()
+            }
+
+            // 组件即将挂载的钩子
+            componentWillMount() {
+                console.log('Count---componentWillMount')
+            }
+
+            // 组件挂载完毕的钩子
+            componentDidMount() {
+                console.log('Count---componentDidMount')
+            }
+
+            // 组件是否应该被更新的钩子 - 控制组件是否更新的阀门
+            // 如果该钩子返回true-则更新执行render，如果返回false-更新被取消
+            // 如果该钩子没写，则React会自动补一个且返回值为true。如果需要有自定义逻辑，则覆写次钩子即可。
+            shouldComponentUpdate() {
+                console.log('Count---shouldComponentUpdate: ', this.state.num < 3)
+                return this.state.num < 3
+            }
+
+            // 组件即将被更新的钩子
+            UNSAFE_componentWillUpdate() {
+                console.log('Count---componentWillUpdate')
+            }
+
+            // 组件即将被更新的钩子
+            componentDidUpdate(prevProps, prevState) {
+                console.log('Count---componentDidUpdate')
+            }
+
+            // 组件即将卸载的钩子
+            componentWillUnmount() {
+                console.log('Count---componentWillUnmount')
+            }
+
+            // 组件已经卸载的钩子 -- ！！！不存在该钩子
+            componentDidUnmounted() {
+                console.log('Count---componentDidUnmounted')
+            }
+
+            // 组件渲染时调用的钩子
+            render() { // 调用次数 1 + n 次
+                console.log('Count---render');
+                return (
+                    <div>
+                        <h2>当前求和为：{this.state.num}</h2>
+                        <button onClick={this.add}>点我+1</button>&emsp;
+                        <button onClick={this.death}>点我卸载组件</button>&emsp;
+                        <button onClick={this.force}>不更改状态，强制更新组件</button>
+                    </div>
+                )
+            }
+        }
+
+        // 挂载组件
+        ReactDOM.render(<Count />, document.getElementById('app'))
+    </script>
+</body>
+</html>

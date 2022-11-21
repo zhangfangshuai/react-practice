@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·refs</title>
+</head>
+<!-- 
+    回调函数式的ref
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class MyComponent extends React.Component {
+            state = { isHot: false }
+            /**
+             * @func 展示左侧输入框的数据
+             * @desc 注意自定义方法只能使用（赋值语句 + 箭头函数）。否则会有this丢失问题
+             */
+            showLeftData = () => {
+                const { leftInput } = this
+                alert(leftInput.value)
+            }
+
+            /**
+             * @func 展示右侧输入框的数据
+             */
+            changeWeather = () => {
+                const { isHot } = this.state
+                this.setState({isHot: !isHot})
+            }
+
+            /**
+             * @func 绑定ref元素
+             * @param {Node} ele ref所在的DOM节点
+             */
+            bindRef = (ele) => {
+                this.leftInput = ele
+            }
+            
+            render() {
+                const {isHot} = this.state
+                // 内联的ref回调函数缺陷
+                // 【来自官网】如果 ref 回调函数是以内联函数的方式定义的，在更新过程中它会被执行两次，第一次传入参数 null，然后第二次会传入参数 DOM 元素。
+                // 这是因为在每次渲染时会创建一个新的函数实例，所以React清空旧的ref并且设置新的。
+                // 通过将ref的回调函数定义成class的绑定函数的方式可以避免上述问题【类绑定形式的ref】。
+                // 但是大多数情况下它是无关紧要的!！！ -- 这种写法在工作中出现较多
+                return (
+                    <div>
+                        <span>今天天气很{isHot ? '炎热' : '凉爽'}</span>
+                        {/* <input ref={cNode => {this.leftInput = cNode; console.log('@', cNode)}} type="text" placeholder="点击按钮提示数据" /> */}
+                        <input ref={this.bindRef} type="text" placeholder="点击按钮提示数据" />
+                        <br /><br />
+                        <button onClick={this.showLeftData}>点我提示左侧的数据</button>
+                        <button onClick={this.changeWeather}>点我更新天气</button>
+                    </div>
+                )
+            }
+        }
+
+        // 渲染组件到页面上
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+    </script>
+</body>
+</html>

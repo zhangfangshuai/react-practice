@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·props</title>
+</head>
+
+<body>
+    <div id="app">
+        <div id="p1"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/prop-types.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Person extends React.Component {
+            render() {
+                const { name, sex, age } = this.props
+                // this.props.age = age + 1 // 报错，因为props是只读的，不允许修改
+                return (
+                    <ul>
+                        <li>姓名：{name}</li>
+                        <li>性别：{sex}</li>
+                        <li>年龄：{age + 1}</li>
+                    </ul>
+                )
+            }
+        }
+
+        // 要给props添加限制规则，需要给Person添加propTypes属性。
+        // 【注意】首字母小写。 首字母大写PropTypes是React内置的数据类型库。
+        // 在React v15.5版本起，PropTypes需要单独引入。
+        // prop-types库为了避免与js类型冲突，对类型如String改为了string，functon改为了func
+        Person.propTypes = {
+            name: PropTypes.string.isRequired, // 限制姓名是字符串，且必填
+            sex: PropTypes.string, // 限制sex为字符串
+            age: PropTypes.number, // 限制age为数值
+            speak: PropTypes.func // 限制speak为函数
+        }
+
+        // 给props设置默认值，使用defaultProps
+        Person.defaultProps = {
+            sex: '男',
+            age: 18
+        }
+
+        // 渲染组件到页面上
+        ReactDOM.render(<Person name="jerry" sex="男" age={19} speak={speak} />, document.getElementById('p1'))
+        ReactDOM.render(<Person name="tom" sex="女" age={18} />, document.getElementById('p2'))
+
+        const p = { name: 'ming', sex: '男', age: 22 } // 通常由ajax返回
+        // ReactDOM.render(<Person name={p.name} sex={p.sex} age={p.age} />, document.getElementById('p3'))
+        ReactDOM.render(<Person {...p} />, document.getElementById('p3'))
+
+        function speak() {
+            console.log('我说话了')
+        }
+    </script>
+</body>
+</html>

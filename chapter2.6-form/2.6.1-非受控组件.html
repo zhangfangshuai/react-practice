@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>非受控组件</title>
+    <style>
+        .form {
+            width: 100%;
+            text-align: center;
+            padding-top: 200px;
+        }
+    </style>
+</head>
+<!-- 
+    非受控组件
+        页面中所有输入类的DOM（如input、checkbox、radio等），数据是现用现取，则称这类的组件为非受控的组件
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Login extends React.Component {
+
+            // 提交表单
+            handleSubmit = () => {
+                event.preventDefault() // 阻止表单提交，阻止默认事件即action跳转
+                const { usernameEle, passwordEle } = this
+                // 现用现取input节点的值
+                alert(`你输入的姓名是${usernameEle.value}，密码是${passwordEle.value}`)
+            }
+
+            render() {
+                return (
+                    // form表单submit默认是GET请求
+                    <form action="https://www.baidu.com" className="form" onSubmit={this.handleSubmit}>
+                        用户名：<input ref={c => this.usernameEle = c} type="text" name="username" /> <br /><br />
+                        密码： <input ref={c=> this.passwordEle = c} type="password" name="password" /> <br /><br />
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+        // 渲染虚拟DOM到页面上
+        ReactDOM.render(<Login />, document.getElementById('app'))
+    </script>
+</body>
+</html>

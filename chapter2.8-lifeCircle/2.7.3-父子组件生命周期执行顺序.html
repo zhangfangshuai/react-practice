@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命周期钩子</title>
+</head>
+
+<!-- 
+    组件生命流的三个渠道
+        1. 父组件render() ==> componentWillReceiveProps ==> shouldComponentUpdate ==> componentWillUpdate ==> render ==> componentDidUpdate
+        1. setState() ==> shouldComponentUpdate ==> componentWillUpdate ==> render ==> componentDidUpdate
+        2. forceUpdate() ==> componentWillUpdate ==> render ==> componentDidUpdate
+ -->
+
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建父组件A
+        class A extends React.Component {
+
+            state = { num: 0 }
+
+            // 加1按钮回调 --- 自定义函数使用：赋值语句 + 箭头函数
+            add = () => {
+                const { num } = this.state
+                this.setState({ num: num + 1 })
+            }
+
+            // 组件渲染时调用的钩子
+            render() { // 调用次数 1 + n 次
+                console.log('A---render');
+                return (
+                    <div>
+                        <h2>我是A组件</h2>
+                        <button onClick={this.add}>点我+1</button>&emsp;
+                        <B currNum={this.state.num} />
+                    </div>
+                )
+            }
+        }
+
+        // 创建子组件B
+        class B extends React.Component {
+            // 组件接瘦到新的props值时触发该钩子
+            // 【注意坑】首次接受到prop时不触发，仅再次接收到新props时才出发
+            UNSAFE_componentWillReceiveProps() {
+                console.log('B---componentWillReceiveProps')
+            }
+
+            // 组件是否应该被更新的钩子 - 控制组件是否更新的阀门
+            // 如果该钩子返回true-则更新执行render，如果返回false-更新被取消
+            // 如果该钩子没写，则React会自动补一个且返回值为true。如果需要有自定义逻辑，则覆写次钩子即可。
+            shouldComponentUpdate() {
+                console.log('B---shouldComponentUpdate: ', this.props.currNum < 3)
+                return this.props.currNum < 3
+            }
+
+            // 组件即将被更新的钩子
+            UNSAFE_componentWillUpdate() {
+                console.log('B---componentWillUpdate')
+            }
+
+            // 组件即将被更新的钩子
+            componentDidUpdate() {
+                console.log('B---componentDidUpdate')
+            }
+
+            render() {
+                console.log('B---render')
+                return (
+                    <div>
+                        <h3>我是B组件，接收到的数据是：{this.props.currNum}</h3>
+                    </div>
+                )
+            }
+        }
+
+        // 挂载组件
+        ReactDOM.render(<A />, document.getElementById('app'))
+    </script>
+</body>
+</html>

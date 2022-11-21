@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·props</title>
+</head>
+
+<body>
+    <div id="app">
+        <div id="p1"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/prop-types.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Person extends React.Component {
+            // 通常，在 React 中，构造函数仅用于以下两种情况
+            // 1. 通过给 this.state 赋值对象来初始化内部 state。 this.state = { weather: 'wind' }
+            // 2. 为事件处理函数绑定实例 this.changeWeather = this.changeWeather.bind(this)
+            // 以上这两种都被2.2.5一文中简化了。
+            // 【总结】类中的构造器，能省略就省略，除非你要在构造器中读取并使用this.props.
+            constructor(props) {
+                console.log(1, props)
+                super(props)
+                // 如果不接收参数props，且在super不传props参数，则如下代码会输出undefined。
+                console.log(2, this.props) // 如果super不接收props，则打印undefined
+            }
+
+            // 给props添加限制规则，使用propTypes
+            static propTypes = {
+                name: PropTypes.string.isRequired,
+                sex: PropTypes.string,
+                age: PropTypes.number,
+                speak: PropTypes.func
+            }
+
+            // 给props添加默认值，使用defaultProps
+            static defaultProps = {
+                sex: '男',
+                age: 18
+            }
+
+            render() {
+                const { name, sex, age } = this.props
+                return (
+                    <ul>
+                        <li>姓名：{name}</li>
+                        <li>性别：{sex}</li>
+                        <li>年龄：{age}</li>
+                    </ul>
+                )
+            }
+        }
+
+
+        // 渲染组件到页面上
+        const p = { name: 'ming' } // 通常由ajax返回
+        ReactDOM.render(<Person {...p} />, document.getElementById('p3'))
+    </script>
+</body>
+</html>

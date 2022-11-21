@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·props</title>
+</head>
+
+<body>
+    <div id="app">
+        <div id="p1"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/prop-types.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <!-- 
+        函数式组件，不能使用state和refs（除非使用React最新版的hooks）
+     -->
+    <script type="text/babel">
+        // 创建函数式组件
+        function Person(props) { // 接收props
+            const { name, sex, age } = props
+            return (
+                <ul>
+                    <li>姓名：{name}</li>
+                    <li>性别：{sex}</li>
+                    <li>年龄：{age}</li>
+                </ul>
+            )
+        }
+
+        // 限定props类型
+        Person.propTypes = {
+            name: PropTypes.string.isRequired,
+            sex: PropTypes.string,
+            age: PropTypes.number,
+            speak: PropTypes.func
+        }
+
+        // 设置props默认值
+        Person.defaultProps = {
+            sex: '男',
+            age: 18
+        }
+
+        // 渲染组件到页面上
+        const p = { name: 'ming' } // 通常由ajax返回
+        ReactDOM.render(<Person {...p} />, document.getElementById('p3'))
+    </script>
+</body>
+</html>

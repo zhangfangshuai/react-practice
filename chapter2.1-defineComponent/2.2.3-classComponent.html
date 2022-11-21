@@ -14,7 +14,7 @@
         3. Render必须要有返回值
     执行了ReactDOM.render(<MyComponent />, document.getElementById('app'))之后，发生了什么？
         1. React解析组件标签，找到MyComponent组件
-        2. 发现组件时使用类定义的，随后new出来该类的实例，并通过该实例调用到原型上的render方法。（印证上买呢的第2点）
+        2. 发现组件时使用类定义的，随后new出来该类的实例，并通过该实例调用到原型上的render方法。（印证上面的第2点）
         3. 将render返回的虚拟DOM转为真实DOM，随后呈现在页面中
  -->
 

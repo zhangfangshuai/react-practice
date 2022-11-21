@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类中方法this的指向</title>
+</head>
+<body>
+    <script>
+        class Person {
+            constructor(name, age) {
+                this.name = name
+                this.age = age
+            }
+            study() {
+                // study方法放在了哪里？ --类的原型对象上，供实例使用
+                // 通过Person实例调用study时，study中的this就是Perosn实例
+                console.log(this)
+            }
+        }
+
+        const p1 = new Person('tom', 18)
+        // 通过实例调用study方法
+        p1.study() // Person {name:'tom',age:18}
+
+        const x = p1.study
+        // 函数的直接调用
+        x() // undefined
+
+        /*
+            1. p1.study函数执行
+                p1调用原型对象傻姑娘的study方法，该方法中的this就是调用方p1实例，很容易得到结果 Person {name:'tom',age:18}
+            2. x对p1的原型方法study进行复制
+                2.1 得到的是原型对象上study方法的一个引用，当x对该方法进行调用时，this的指向就是调用方x的作用域，此时不可能再是p1实例，更不可能读取到p1的属性
+                2.2 普通函数x的作用域是Windows，但在类会给方法函数开启局部严格模式，这是类的特性，因此本应该是Windows的this就成了undefined
+        */
+    </script>
+</body>
+</html>

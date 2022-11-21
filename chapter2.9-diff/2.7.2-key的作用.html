@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>key的作用</title>
+</head>
+<!-- 
+    React/vue中的key有什么作用？（key的内部原理是什么）
+    为什么遍历列表时，key最好不要用index？
+    
+    1. 虚拟DOM中key的作用
+        1）简单的说：key是虚拟DOM对象的标识，在更新显示时key起着极其重要的作用
+
+        2）详细的说：当状态中的数据发生变化时，react会根据【新数据】生成【新的虚拟DOM】，
+                   随后React进行【新虚拟DOM】与【旧虚拟DOM】的diff比较。
+        
+        Diff比较规则如下：
+            a. 旧虚拟DOM中找到了与新虚拟DOM相同的key：
+                （1）若虚拟DOM中内容没变，直接使用之前的真实DOM；
+                （2）若虚拟DOM中的内容变了，则生成新的真实DOM，随后替换页面中之前的真实DOM；
+
+            b. 旧虚拟DOM中未找到与新虚拟DOM相同的key：
+                根据数据创建新的真实DOM，随后渲染到页面上。
+
+    
+    2. 用index作为key可能会引发的问题：
+        1）若对数据进行：逆序添加、逆序删除等破坏顺序的操作，由于顺序变化了，会产生没有必要的真实ODM更新。
+                因为所有虚拟DOM的index下标都会被更新，此时新旧虚拟DOM相同key下的节点并不是同一个，节点内容也就不同，此时被React认为是虚拟DOM被更新了
+                此时只是效率低，不会有错误。
+        
+        2）如果有破坏顺序的操作，结构中还包含输入类的DOM，可能产生错误的DOM更新，页面展示也会出现错误。
+                会把子节点错误的追加给错误的父节点上，因为追加时认的是key。
+        
+        3）但是：如果不存在对数据逆序添加、逆序删除等破坏顺序的操作，而仅用于渲染列表展示
+                则使用index作为key是没有问题的。
+
+
+    3. 开发中如何选择key？
+        1）最好使用数据中的唯一标识作为key
+                如 id、手机号、身份证号、学生号等在现实意义上久存在唯一性等概念;
+
+        2）如果只是简单的展示数据，用index也是可以的。
+                index的好处是循环体自身就有，简单方便。
+            
+        3）如果找不到唯一标识，又不能使用index的情形
+                a. 尝试使用数据中多个字段组合
+
+                b. 使用当前时间戳
+            
+    
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+          更新过程与Diff对比：- 使用index索引值作为key
+
+            初始数据：
+                { id: 1, name: '小张', age: 18 },
+                { id: 2, name: '小李', age: 20 }
+            初始的虚拟DOM：
+                <li key=0>小张---18<input type="text" /></li>
+                <li key=1>小李---19<input type="text" /></li>
+
+            更新后的数据：
+                { id: 3, name: '小王', age: 20 },
+                { id: 1, name: '小张', age: 18 },
+                { id: 2, name: '小李', age: 20 }
+            更新数据后的虚拟DOM：
+                <li key=0>小王---18<input type="text" /></li>
+                <li key=1>小张---18<input type="text" /></li>
+                <li key=2>小李---19<input type="text" /></li>
+         */
+        
+        class Person extends React.Component {
+
+            state = {
+                persons: [
+                    { id: 1, name: '小张', age: 18 },
+                    { id: 2, name: '小李', age: 19 }
+                ]
+            }
+
+            addPerson = () => {
+                const { persons } = this.state
+                const p = { id: persons.length + 1, name: '小王', age: 20 }
+                this.setState({ persons: [p, ...persons] })
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h2>人员信息列表</h2>
+                        <button onClick={this.addPerson}>添加人员</button>
+                        <ul>
+                            {
+                                this.state.persons.map(person => {
+                                   return <li key={person.id}>{person.name}--{person.age} <input type="text" /></li>
+                                })
+                            }
+                        </ul>
+                    </div>
+                )
+            }
+        }
+
+        // 挂载组件
+        ReactDOM.render(<Person />, document.getElementById('app'))
+    </script>
+</body>
+</html>

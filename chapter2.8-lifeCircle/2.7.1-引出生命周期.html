@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>引出生命周期</title>
+</head>
+<!-- 
+    实现需求：
+        1. 页面挂载后，实现页面文字渐淡出页面的动画，
+        2. 点击按钮，组件卸载
+    
+    生命周期钩子函数：
+        React在组件从创建到死亡全过程中合适的时机，调用对应的函数，这些函数与render函数同级
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class MyComponent extends React.Component {
+
+            state = {
+                opacity: 0.5
+            }
+
+            death = () => {
+                // clearInterval(this.timer)
+                // 卸载组件
+                ReactDOM.unmountComponentAtNode(document.getElementById('app'))
+            }
+
+            // 【生命周期钩子函数】组件挂载完毕时，由React调用
+            componentDidMount() {
+                this.timer = setInterval(() => {
+                    let { opacity } = this.state
+                    opacity -= 0.1
+                    if (opacity <= 0) opacity = 1
+                    this.setState({ opacity })
+                }, 200)
+            }
+
+            componentWillUnmount() {
+                // 卸载组件前，React会调用该生命周期钩子。
+                clearInterval(this.timer)
+            }
+
+            render() { // 调用次数 1 + n 次
+                return (
+                    <div>
+                        <h2 style={{ opacity: this.state.opacity }}>React学不会怎么办？</h2>
+                        <button onClick={this.death}>不活了</button>
+                    </div>
+                )
+            }
+        }
+
+        // 挂载组件
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+        /*
+          执行了ReactDOM.render(<MyComponent />, document.getElementById('app'))之后，发生了什么？
+            1. React解析组件标签，找到MyComponent组件
+            2. 发现组件时使用类定义的，随后new出来该类的实例，并通过该实例调用到原型上的render方法。
+                2.1 除了调用render方法外，React调用了ComponentDidMount方法，且调用次数只调用了一次
+            3. 将render返回的虚拟DOM转为真实DOM，随后呈现在页面中
+         */
+    </script>
+</body>
+</html>

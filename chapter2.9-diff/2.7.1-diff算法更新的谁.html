@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffing算法</title>
+</head>
+<!-- 
+    Diffing算法：
+        1. 将变更后新旧虚拟DOM进行比较，找到有变化的节点，进行更新到真实DOM上
+        2. 最小粒度是标签（节点）
+        3. 当标签里套用标签，不管哪一层出现更新，diffing算法都会逐层深入对比，对于父标签更新子标签未更新的子节点，渲染时依旧不会被更新。
+    
+ -->
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Time extends React.Component {
+
+            state = {
+                date: new Date()
+            }
+
+            componentDidMount() {
+                // 每隔一秒，更新时间
+                this.timer = setInterval(() => {
+                    this.setState({ date: new Date() })
+                }, 1000)
+            }
+
+            componentWillUnmount() {
+                clearInterval(this.timer)
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h2>Hello, React</h2> <br/>
+                        <input type="text" placeholder="this is a input" /> &emsp;
+                        <div>
+                            当前时间：{this.state.date.toLocaleString()}
+                            <input type="text" placeholder="inner input" />
+                        </div>
+                    </div>
+                )
+            }
+        }
+
+        // 挂载组件
+        ReactDOM.render(<Time />, document.getElementById('app'))
+    </script>
+</body>
+</html>

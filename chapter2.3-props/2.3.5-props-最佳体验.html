@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件实例的三大属性之·props</title>
+</head>
+
+<body>
+    <div id="app">
+        <div id="p1"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/prop-types.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 创建组件
+        class Person extends React.Component {
+            // 给props添加限制规则，使用propTypes
+            // 以下代码的含义是：给类自身添加属性propTypes, 相当于Person.propTypes = {...}
+            static propTypes = {
+                name: PropTypes.string.isRequired,
+                sex: PropTypes.string,
+                age: PropTypes.number,
+                speak: PropTypes.func
+            }
+
+            // 给props添加默认值，使用defaultProps
+            static defaultProps = {
+                sex: '男',
+                age: 18
+            }
+
+            render() {
+                const { name, sex, age } = this.props
+                return (
+                    <ul>
+                        <li>姓名：{name}</li>
+                        <li>性别：{sex}</li>
+                        <li>年龄：{age}</li>
+                    </ul>
+                )
+            }
+        }
+
+
+        // 渲染组件到页面上
+        ReactDOM.render(<Person name="jerry" sex="男" age={19} speak={speak} />, document.getElementById('p1'))
+        ReactDOM.render(<Person name="tom" sex="女" age={18} />, document.getElementById('p2'))
+
+        const p = { name: 'ming', sex: '男', age: 22 } // 通常由ajax返回
+        // ReactDOM.render(<Person name={p.name} sex={p.sex} age={p.age} />, document.getElementById('p3'))
+        ReactDOM.render(<Person {...p} />, document.getElementById('p3'))
+
+        function speak() {
+            console.log('我说话了')
+        }
+    </script>
+</body>
+</html>

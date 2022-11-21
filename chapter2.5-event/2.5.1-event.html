@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件处理</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="./lib/react.development.js"></script>
+    <script type="text/javascript" src="./lib/react-dom.development.js"></script>
+    <script type="text/javascript" src="./lib/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+        （1）通过onXXX（小驼峰）属性指定事件处理函数（注意大小写） -- 如 原生onclick改为onClick事件
+            a：React使用的是自定义（合成）事件，而不是使用原生的DOM事件 -- 为了更好的兼容性，处理了兼容性问题
+            b：React中的事件是通过事件委托的方式处理的（委托给事件的最外层）-- 为了事件处理的高效
+        （2）通过event.target得到发生事件的DOM元素对象 - 可以替代ref
+        （3）发生事件的元素和要操作的元素是同一个元素时，可以省略ref，替换为event.target来获取节点
+         */
+        class MyComponent extends React.Component {
+            myRef = React.createRef()
+
+            // 显示左侧输入框内容
+            showData = () => {
+                alert(this.myRef.current.value)
+            }
+
+            // 显示右侧输入框内容
+            showRightData = (event) => {
+                alert(event.target.value)
+            }
+
+            render() {
+                return (
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="请输入" /> &emsp;
+                        <button onClick={this.showData}>点击显示左侧内容</button> &emsp;
+                        <input onBlur={this.showRightData} type="text" placeholder="请输入" />
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('app'))
+    </script>
+</body>
+</html>
