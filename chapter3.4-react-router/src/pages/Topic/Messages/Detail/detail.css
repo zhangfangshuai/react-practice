@@ -1,0 +1,8 @@
+.topic-msg-detail {
+    padding-top: 24px;
+    border-top: solid 1px #E4E7ED;
+}
+
+.topic-msg-detail p {
+    line-height: 24px;
+}

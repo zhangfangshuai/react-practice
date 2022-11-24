@@ -1,0 +1,38 @@
+.app-topic {
+    width: 100%;
+    padding: 0 12px;
+}
+
+.app-topic h3 {
+    padding: 24px 0;
+}
+
+.topic-nav {
+    display: flex;
+    border-bottom: solid 1px #E4E7ED;
+}
+
+.topic-container {
+    width: 100%;
+    padding: 24px 12px;
+}
+
+.home-news, .home-msg {
+    padding: 12px;
+}
+
+.home-news li, .home-msg li {
+    line-height: 35px;
+}
+
+.home-msg li {
+    color: #1d63ef;
+}
+
+.home-msg button {
+    padding: 3px 12px;
+}
+
+.home-news button {
+    padding: 1px 12px;
+}

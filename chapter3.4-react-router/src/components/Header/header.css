@@ -1,0 +1,15 @@
+.app-header span {
+    border-bottom: solid 1px #E4E7ED;
+    padding: 36px 24px 18px;
+    font-size: 36px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.app-header button {
+    padding: 6px 12px;
+    background: #E6A23C;
+    border-radius: 4px;
+    border: solid 1px #E6A23C;
+    color: white;
+}

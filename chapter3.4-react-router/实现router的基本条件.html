@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History库使用</title>
+</head>
+<!-- 
+    history库是React Router的核心依赖
+        - 它是原生history的超集，扩展了如location、canGo、block、listen等功能
+        - 提供了3种类型的history，browserHistory、hashHistory、memoryHistory，并保持统一的API
+        - 支持发布/订阅功能，当history发生改变时，自动触发订阅函数
+        - 提供跳转拦截、跳转确认basename等实用功能。
+    history库虽然时React Router的核心依赖，但它跟React本身没有依赖关系。如果项目中有需要操作history场景，可以单独引入实用。
+ -->
+<body>
+    <a href="http://www.baidu.com" onclick="return push('test1')">push test1</a><br><br>
+    <button onClick="push('/test2')">push test2</button><br><br>
+    <button onClick="replace('/test3')">replace test3</button><br><br>
+    <button onClick="back()">&lt;= 后退</button> 
+    <button onClick="forward()">前进 =&gt;</button><br><br>
+
+    <script type="text/javascript" src="https://unpkg.com/history/umd/history.production.min.js"></script>
+    <script type="text/javascript">
+        let history = HistoryLibrary.createBrowserHistory()
+        // let history = History.createHashHistory()
+
+        function push(path) {
+            history.push(path, { some: "state" })
+            return false
+        }
+
+        function replace(path) {
+            history.replace(path)
+        }
+
+        function back() {
+            history.goBack()
+        }
+
+        function forward() {
+            history.goForward()
+        }
+
+        history.listen(location => {
+            console.log('请求路由路径变化了',location);
+        })
+    </script>
+</body>
+</html>
